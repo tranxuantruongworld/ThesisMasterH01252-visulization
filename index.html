@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VARSew Dataset Visualization</title>
+  <link rel="stylesheet" href="style.css">
+  <!-- Load Plotly.js -->
+  <script src="https://cdn.plot.ly/plotly-2.24.1.min.js"></script>
+</head>
+
+<body>
+  <header>
+    <div class="logo-container">
+      <div class="logo-icon">V</div>
+      <div>
+        <h1>VARSew</h1>
+        <p>A Visual Action Recognition Dataset on Garment Sewing</p>
+      </div>
+    </div>
+    <div class="header-badges">
+      <div class="badge">Classes: 8</div>
+      <div class="badge">Resolution: 96x96x3</div>
+      <div class="badge success">Balanced Visualization</div>
+    </div>
+  </header>
+
+  <main>
+    <div class="dashboard-grid">
+      <!-- Sidebar / Details -->
+      <section class="sidebar">
+        <!-- Dataset Info -->
+        <div class="card">
+          <h2 class="card-title">Dataset Summary</h2>
+          <div class="stat-row">
+            <div class="stat-label">Total Train Samples</div>
+            <div class="stat-val">12,020</div>
+          </div>
+          <div class="stat-row">
+            <div class="stat-label">Total Val Samples</div>
+            <div class="stat-val">4,808</div>
+          </div>
+          <div class="stat-row">
+            <div class="stat-label">Total Test Samples</div>
+            <div class="stat-val">7,212</div>
+          </div>
+          <div class="stat-row">
+            <div class="stat-label">Visualizing Subset</div>
+            <div class="stat-val">400 (50 per class)</div>
+          </div>
+        </div>
+
+        <!-- Class Legend -->
+        <div class="card">
+          <h2 class="card-title">Class Distribution</h2>
+          <div class="class-list">
+            <div class="class-item active" data-class="all">
+              <div class="class-name-dot">
+                <div class="dot" style="background: linear-gradient(135deg, var(--accent-purple), var(--accent-blue));">
+                </div>
+                All Classes
+              </div>
+              <div class="class-count">400</div>
+            </div>
+            <div class="class-item" data-class="0">
+              <div class="class-name-dot">
+                <div class="dot bg-sew"></div>
+                Sew
+              </div>
+              <div class="class-count">50</div>
+            </div>
+            <div class="class-item" data-class="1">
+              <div class="class-name-dot">
+                <div class="dot bg-release"></div>
+                Release
+              </div>
+              <div class="class-count">50</div>
+            </div>
+            <div class="class-item" data-class="2">
+              <div class="class-name-dot">
+                <div class="dot bg-handle"></div>
+                Handle
+              </div>
+              <div class="class-count">50</div>
+            </div>
+            <div class="class-item" data-class="3">
+              <div class="class-name-dot">
+                <div class="dot bg-prepare"></div>
+                Prepare
+              </div>
+              <div class="class-count">50</div>
+            </div>
+            <div class="class-item" data-class="4">
+              <div class="class-name-dot">
+                <div class="dot bg-check"></div>
+                Check
+              </div>
+              <div class="class-count">50</div>
+            </div>
+            <div class="class-item" data-class="5">
+              <div class="class-name-dot">
+                <div class="dot bg-wait"></div>
+                Wait
+              </div>
+              <div class="class-count">50</div>
+            </div>
+            <div class="class-item" data-class="6">
+              <div class="class-name-dot">
+                <div class="dot bg-maintain"></div>
+                Maintain
+              </div>
+              <div class="class-count">50</div>
+            </div>
+            <div class="class-item" data-class="7">
+              <div class="class-name-dot">
+                <div class="dot bg-adjust"></div>
+                Adjust
+              </div>
+              <div class="class-count">50</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Plot Container -->
+      <section class="card plot-card">
+        <div class="plot-header">
+          <div class="plot-title-desc">
+            <h3>3D Feature Space (t-SNE Projection)</h3>
+            <p>Interactive 3D scatter plot of image features. Hover points to preview sewing actions, rotate or drag to
+              explore cluster separations.</p>
+          </div>
+        </div>
+
+        <!-- Plotly div -->
+        <div id="plotly-div"></div>
+
+        <!-- Floating Hover Card -->
+        <div id="hover-card" class="hover-card">
+          <img id="hover-img" class="hover-img" src="" alt="Hover Image">
+          <div class="hover-details">
+            <div id="hover-title" class="hover-title">Image Frame</div>
+            <div id="hover-class" class="hover-class">Class</div>
+            <div id="hover-meta" class="hover-meta">ID: 0</div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- Gallery Section -->
+    <section class="card gallery-section">
+      <h2 class="card-title">Dataset Image Explorer</h2>
+      <div class="gallery-tabs">
+        <button class="tab-btn active" data-tab="all">All Images</button>
+        <button class="tab-btn" data-tab="0">Sew</button>
+        <button class="tab-btn" data-tab="1">Release</button>
+        <button class="tab-btn" data-tab="2">Handle</button>
+        <button class="tab-btn" data-tab="3">Prepare</button>
+        <button class="tab-btn" data-tab="4">Check</button>
+        <button class="tab-btn" data-tab="5">Wait</button>
+        <button class="tab-btn" data-tab="6">Maintain</button>
+        <button class="tab-btn" data-tab="7">Adjust</button>
+      </div>
+
+      <div id="gallery-grid" class="gallery-grid">
+        <!-- Rendered dynamically -->
+      </div>
+    </section>
+  </main>
+
+  <!-- Modal Preview -->
+  <div id="preview-modal" class="modal">
+    <div class="modal-content">
+      <button id="modal-close" class="modal-close">&times;</button>
+      <img id="modal-img" class="modal-img" src="" alt="Modal Image">
+      <div class="modal-info">
+        <h3 id="modal-title" class="modal-title">Sewing Action</h3>
+        <div id="modal-badge" class="modal-badge">Sew</div>
+        <p id="modal-coords" class="modal-coords">PCA + t-SNE coordinates</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main logic script -->
+  <script src="script.js"></script>
+</body>
+
+</html>
